@@ -51,15 +51,14 @@ int main(int argc, char **argv)
         }
         else if (arg == "--decode")
         {
-            long n, e;
-            char* m;
+            long n, e, m;
             cout << "e: ";
             cin >> e;
             cout << "n: ";
             cin >> n;
             cout << "m: ";
             cin >> m;
-            long c = decode(e, n, (int)m);
+            long c = decode(e, n, m);
             cout << "c: " << c << endl;
         }
         else if (arg == "--encode")
