@@ -158,7 +158,7 @@ string decodetext(long long e, long long p, long long q, string c)
     {
         int size = text[0] - '0';
         string block = text.substr(1, size);
-        m += decode(df((p - 1) * (q - 1), e), p * q, hep2dec(block));
+        m += dec2hep(decode(df((p - 1) * (q - 1), e), p * q, hep2dec(block)));
         text.erase(0, size + 1);
     }
     return m;
@@ -178,7 +178,7 @@ long long hep2dec(string text)
     for (int i = 0; i < decs.size(); i++)
     {
         result += twenties * decs[i];
-        twenties *= 27;
+        twenties *= 26;
     }
     return result;
 }
@@ -189,8 +189,8 @@ string dec2hep(long long decimal)
     vector<int> decs;
     while (orig != 0)
     {
-        decs.push_back(orig % 27);
-        orig /= 27;
+        decs.push_back(orig % 26);
+        orig /= 26;
     }
     char heps[decs.size()];
     for (int i = 1; i <= decs.size(); i++)
@@ -220,7 +220,7 @@ long long df(long long p1q1, long long e)
     c = rs[rs.size() - 1];
     if ((c * e) % p1q1 != 1)
     {
-        c = pq - c;
+        c = p1q1 - c;
     }
     return c;
 }
