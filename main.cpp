@@ -150,7 +150,18 @@ vector<string> split(string text)
     vector<string> result;
     for (int i = 0; i <= text.size() - 1; i += 4)
     {
-        result.push_back(text.substr(i, min((unsigned long)4, text.size() - i)));
+        string block = text.substr(i, min((unsigned long)4, text.size() - i));
+        result.push_back(block);
+        if (block[0] == 'a')
+        {
+            result = {};
+            string fixed = "a" + text;
+            for (int i = 0; i <= fixed.size() - 1; i += 4)
+            {
+                string block = fixed.substr(i, min((unsigned long)4, fixed.size() - i));
+                result.push_back(block);
+            }
+        }
     }
     return result;
 }
@@ -174,7 +185,7 @@ string decodetext(long long e, long long p, long long q, string c)
     string m = "";
     while (text != "")
     {
-        int size = text[0] - 96;
+        int size = text[0] - 97;
         string block = text.substr(1, size);
         m += dec2hep(decode(df((p - 1) * (q - 1), e), p * q, hep2dec(block)));
         text.erase(0, size + 1);
@@ -190,13 +201,13 @@ long long hep2dec(string text)
     for (int i = text.size() - 1; i >= 0; i--)
     {
         char digit = text[i];
-        int ascii = (int)digit - 96;
+        int ascii = (int)digit - 97;
         decs.push_back(ascii);
     }
     for (int i = 0; i < decs.size(); i++)
     {
         result += twenties * decs[i];
-        twenties *= 27;
+        twenties *= 26;
     }
     return result;
 }
@@ -207,13 +218,13 @@ string dec2hep(long long decimal)
     vector<int> decs;
     while (orig != 0)
     {
-        decs.push_back(orig % 27);
-        orig /= 27;
+        decs.push_back(orig % 26);
+        orig /= 26;
     }
     char heps[decs.size()];
     for (int i = 1; i <= decs.size(); i++)
     {
-        heps[decs.size() - i] = decs[i - 1] + 96;
+        heps[decs.size() - i] = decs[i - 1] + 97;
     }
     string result(heps, decs.size());
     return result;
