@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <map>
 
 using namespace std;
 
@@ -37,9 +38,18 @@ int main(int argc, char **argv)
     else
     {
         string type, arg = argv[1];
-        if (argc == 3)
+        map<string, long long> params;
+        if (argc >= 3)
         {
             type = argv[2];
+        }
+        for (int i = 0; i < argc; i++)
+        {
+            string val = argv[i];
+            if (val[2] == '=')
+            {
+                params[val.substr(1, 1)] = atoll(val.substr(3).c_str());
+            }
         }
         if (arg == "keygen")
         {
@@ -67,60 +77,68 @@ int main(int argc, char **argv)
         {
             if (type == "-text")
             {
-                long long n, e;
+                vector<string> keys{"e", "n"};
+                for (int i = 0; i < keys.size(); i++)
+                {
+                    if (params.find(keys[i]) == params.end())
+                    {
+                        cout << keys[i] << ": ";
+                        cin >> params[keys[i]];
+                    }
+                }
                 string m;
-                cout << "e: ";
-                cin >> e;
-                cout << "n: ";
-                cin >> n;
                 cout << "mt: ";
                 cin >> m;
                 // cout << "m: " << hep2dec(m) << endl;
-                cout << "ct: " << encodetext(e, n, m) << endl;
+                cout << "ct: " << encodetext(params["e"], params["n"], m) << endl;
                 // cout << "c: " << encode(e, n, hep2dec(m)) << endl;
             }
             else
             {
-                long long n, e, m;
-                cout << "e: ";
-                cin >> e;
-                cout << "n: ";
-                cin >> n;
-                cout << "m: ";
-                cin >> m;
-                cout << "c: " << encode(e, n, m) << endl;
+                vector<string> keys{"e", "n", "m"};
+                for (int i = 0; i < keys.size(); i++)
+                {
+                    if (params.find(keys[i]) == params.end())
+                    {
+                        cout << keys[i] << ": ";
+                        cin >> params[keys[i]];
+                    }
+                }
+                cout << "c: " << encode(params["e"], params["n"], params["m"]) << endl;
             }
         }
         else if (arg == "decode")
         {
             if (type == "-text")
             {
-                long long p, q, e;
+                vector<string> keys{"e", "p", "q"};
+                for (int i = 0; i < keys.size(); i++)
+                {
+                    if (params.find(keys[i]) == params.end())
+                    {
+                        cout << keys[i] << ": ";
+                        cin >> params[keys[i]];
+                    }
+                }
                 string c;
-                cout << "e: ";
-                cin >> e;
-                cout << "p: ";
-                cin >> p;
-                cout << "q: ";
-                cin >> q;
                 cout << "ct: ";
                 cin >> c;
                 // cout << "c: " << h1ep2dec(c) << endl;
-                cout << "mt: " << decodetext(e, p, q, c) << endl;
+                cout << "mt: " << decodetext(params["e"], params["p"], params["q"], c) << endl;
                 // cout << "m: " << decode(df((p - 1) * (q - 1), e), p * q, hep2dec(c)) << endl;
             }
             else
             {
-                long long p, q, e, c;
-                cout << "e: ";
-                cin >> e;
-                cout << "p: ";
-                cin >> p;
-                cout << "q: ";
-                cin >> q;
-                cout << "c: ";
-                cin >> c;
-                cout << "m: " << decode(df((p - 1) * (q - 1), e), p * q, c) << endl;
+                vector<string> keys{"p", "q", "e", "c"};
+                for (int i = 0; i < keys.size(); i++)
+                {
+                    if (params.find(keys[i]) == params.end())
+                    {
+                        cout << keys[i] << ": ";
+                        cin >> params[keys[i]];
+                    }
+                }
+                cout << "m: " << decode(df((params["p"] - 1) * (params["q"] - 1), params["e"]), params["p"] * params["q"], params["c"]) << endl;
             }
         }
     }
@@ -144,7 +162,7 @@ string encodetext(long long e, long long n, string m)
     for (int i = 0; i < messages.size(); i++)
     {
         string block = dec2hep(encode(e, n, hep2dec(messages[i])));
-        result += to_string(block.size());
+        result += dec2hep(block.size());
         result += block;
     }
     return result;
@@ -156,7 +174,7 @@ string decodetext(long long e, long long p, long long q, string c)
     string m = "";
     while (text != "")
     {
-        int size = text[0] - '0';
+        int size = text[0] - 96;
         string block = text.substr(1, size);
         m += dec2hep(decode(df((p - 1) * (q - 1), e), p * q, hep2dec(block)));
         text.erase(0, size + 1);
@@ -172,13 +190,13 @@ long long hep2dec(string text)
     for (int i = text.size() - 1; i >= 0; i--)
     {
         char digit = text[i];
-        int ascii = (int)digit - 97;
+        int ascii = (int)digit - 96;
         decs.push_back(ascii);
     }
     for (int i = 0; i < decs.size(); i++)
     {
         result += twenties * decs[i];
-        twenties *= 26;
+        twenties *= 27;
     }
     return result;
 }
@@ -189,13 +207,13 @@ string dec2hep(long long decimal)
     vector<int> decs;
     while (orig != 0)
     {
-        decs.push_back(orig % 26);
-        orig /= 26;
+        decs.push_back(orig % 27);
+        orig /= 27;
     }
     char heps[decs.size()];
     for (int i = 1; i <= decs.size(); i++)
     {
-        heps[decs.size() - i] = decs[i - 1] + 97;
+        heps[decs.size() - i] = decs[i - 1] + 96;
     }
     string result(heps, decs.size());
     return result;
