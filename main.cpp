@@ -12,8 +12,8 @@ string encodetext(long long e, long long n, string m);
 string decodetext(long long e, long long p, long long q, string c);
 long long df(long long pq, long long e);
 long long gcp(long long s, long long t);
-long long hep2dec(string text);
-string dec2hep(long long decimal);
+long long txt2dec(string text);
+string dec2txt(long long decimal);
 vector<string> split(string text);
 
 int main(int argc, char **argv)
@@ -89,9 +89,9 @@ int main(int argc, char **argv)
                 string m;
                 cout << "mt: ";
                 cin >> m;
-                // cout << "m: " << hep2dec(m) << endl;
+                // cout << "m: " << txt2dec(m) << endl;
                 cout << "ct: " << encodetext(params["e"], params["n"], m) << endl;
-                // cout << "c: " << encode(e, n, hep2dec(m)) << endl;
+                // cout << "c: " << encode(e, n, txt2dec(m)) << endl;
             }
             else
             {
@@ -125,7 +125,7 @@ int main(int argc, char **argv)
                 cin >> c;
                 // cout << "c: " << h1ep2dec(c) << endl;
                 cout << "mt: " << decodetext(params["e"], params["p"], params["q"], c) << endl;
-                // cout << "m: " << decode(df((p - 1) * (q - 1), e), p * q, hep2dec(c)) << endl;
+                // cout << "m: " << decode(df((p - 1) * (q - 1), e), p * q, txt2dec(c)) << endl;
             }
             else
             {
@@ -152,16 +152,16 @@ vector<string> split(string text)
     {
         string block = text.substr(i, min((unsigned long)4, text.size() - i));
         result.push_back(block);
-        if (block[0] == 'a')
-        {
-            result = {};
-            string fixed = "a" + text;
-            for (int i = 0; i <= fixed.size() - 1; i += 4)
-            {
-                string block = fixed.substr(i, min((unsigned long)4, fixed.size() - i));
-                result.push_back(block);
-            }
-        }
+        // if (block[0] == 'a')
+        // {
+        //     result = {};
+        //     string fixed = "a" + text;
+        //     for (int i = 0; i <= fixed.size() - 1; i += 4)
+        //     {
+        //         string block = fixed.substr(i, min((unsigned long)4, fixed.size() - i));
+        //         result.push_back(block);
+        //     }
+        // }
     }
     return result;
 }
@@ -172,8 +172,8 @@ string encodetext(long long e, long long n, string m)
     string result = "";
     for (int i = 0; i < messages.size(); i++)
     {
-        string block = dec2hep(encode(e, n, hep2dec(messages[i])));
-        result += dec2hep(block.size());
+        string block = dec2txt(encode(e, n, txt2dec(messages[i])));
+        result += dec2txt(block.size());
         result += block;
     }
     return result;
@@ -187,13 +187,13 @@ string decodetext(long long e, long long p, long long q, string c)
     {
         int size = text[0] - 97;
         string block = text.substr(1, size);
-        m += dec2hep(decode(df((p - 1) * (q - 1), e), p * q, hep2dec(block)));
+        m += dec2txt(decode(df((p - 1) * (q - 1), e), p * q, txt2dec(block)));
         text.erase(0, size + 1);
     }
     return m;
 }
 
-long long hep2dec(string text)
+long long txt2dec(string text)
 {
     long long result = 0;
     long long twenties = 1;
@@ -201,32 +201,32 @@ long long hep2dec(string text)
     for (int i = text.size() - 1; i >= 0; i--)
     {
         char digit = text[i];
-        int ascii = (int)digit - 97;
+        int ascii = (int)digit - 96;
         decs.push_back(ascii);
     }
     for (int i = 0; i < decs.size(); i++)
     {
         result += twenties * decs[i];
-        twenties *= 26;
+        twenties *= 27;
     }
     return result;
 }
 
-string dec2hep(long long decimal)
+string dec2txt(long long decimal)
 {
     long long orig = decimal;
     vector<int> decs;
     while (orig != 0)
     {
-        decs.push_back(orig % 26);
-        orig /= 26;
+        decs.push_back(orig % 27);
+        orig /= 27;
     }
-    char heps[decs.size()];
+    char txts[decs.size()];
     for (int i = 1; i <= decs.size(); i++)
     {
-        heps[decs.size() - i] = decs[i - 1] + 97;
+        txts[decs.size() - i] = decs[i - 1] + 96;
     }
-    string result(heps, decs.size());
+    string result(txts, decs.size());
     return result;
 }
 
