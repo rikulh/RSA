@@ -74,10 +74,10 @@ int main(int argc, char **argv)
             {
                 e = engine() % 1000;
             }
-            cout << "e: " << e << endl;
-            cout << "p: " << p << endl;
-            cout << "q: " << q << endl;
-            cout << "n: " << p * q << endl;
+            cout << "e=" << e << endl;
+            cout << "p=" << p << endl;
+            cout << "q=" << q << endl;
+            cout << "n=" << p * q << endl;
         }
         else if (arg == "encode")
         {
