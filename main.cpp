@@ -4,6 +4,12 @@
 #include <random>
 #include <map>
 
+#define standard_start 96
+#define standard_set 27
+
+#define extension_start 33
+#define extension_set 94
+
 using namespace std;
 
 long long encode(long long e, long long n, long long m);
@@ -185,7 +191,7 @@ string decodetext(long long e, long long p, long long q, string c)
     string m = "";
     while (text != "")
     {
-        int size = text[0] - 97;
+        int size = text[0] - extension_start;
         string block = text.substr(1, size);
         m += dec2txt(decode(df((p - 1) * (q - 1), e), p * q, txt2dec(block)));
         text.erase(0, size + 1);
@@ -196,18 +202,17 @@ string decodetext(long long e, long long p, long long q, string c)
 long long txt2dec(string text)
 {
     long long result = 0;
-    long long twenties = 1;
     vector<int> decs;
-    for (int i = text.size() - 1; i >= 0; i--)
+    for (int i = 0; i < text.size(); i++)
     {
         char digit = text[i];
-        int ascii = (int)digit - 96;
+        int ascii = (int)digit - extension_start;
         decs.push_back(ascii);
     }
     for (int i = 0; i < decs.size(); i++)
     {
-        result += twenties * decs[i];
-        twenties *= 27;
+        result *= extension_set;
+        result += decs[i];
     }
     return result;
 }
@@ -218,13 +223,13 @@ string dec2txt(long long decimal)
     vector<int> decs;
     while (orig != 0)
     {
-        decs.push_back(orig % 27);
-        orig /= 27;
+        decs.push_back(orig % extension_set);
+        orig /= extension_set;
     }
     char txts[decs.size()];
     for (int i = 1; i <= decs.size(); i++)
     {
-        txts[decs.size() - i] = decs[i - 1] + 96;
+        txts[decs.size() - i] = decs[i - 1] + extension_start;
     }
     string result(txts, decs.size());
     return result;
