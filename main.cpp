@@ -74,9 +74,9 @@ int main(int argc, char **argv)
             {
                 e = engine() % 1000;
             }
-            cout << "e=" << e << endl;
-            cout << "p=" << p << endl;
-            cout << "q=" << q << endl;
+            cout << "e=" << e << ";";
+            cout << "p=" << p << ";";
+            cout << "q=" << q << ";";
             cout << "n=" << p * q << endl;
         }
         else if (arg == "encode")
@@ -191,7 +191,7 @@ string decodetext(long long e, long long p, long long q, string c)
     string m = "";
     while (text != "")
     {
-        int size = text[0] - extension_start;
+        int size = text[0] - standard_start;
         string block = text.substr(1, size);
         m += dec2txt(decode(df((p - 1) * (q - 1), e), p * q, txt2dec(block)));
         text.erase(0, size + 1);
@@ -206,12 +206,12 @@ long long txt2dec(string text)
     for (int i = 0; i < text.size(); i++)
     {
         char digit = text[i];
-        int ascii = (int)digit - extension_start;
+        int ascii = (int)digit - standard_start;
         decs.push_back(ascii);
     }
     for (int i = 0; i < decs.size(); i++)
     {
-        result *= extension_set;
+        result *= standard_set;
         result += decs[i];
     }
     return result;
@@ -223,13 +223,13 @@ string dec2txt(long long decimal)
     vector<int> decs;
     while (orig != 0)
     {
-        decs.push_back(orig % extension_set);
-        orig /= extension_set;
+        decs.push_back(orig % standard_set);
+        orig /= standard_set;
     }
     char txts[decs.size()];
     for (int i = 1; i <= decs.size(); i++)
     {
-        txts[decs.size() - i] = decs[i - 1] + extension_start;
+        txts[decs.size() - i] = decs[i - 1] + standard_start;
     }
     string result(txts, decs.size());
     return result;
