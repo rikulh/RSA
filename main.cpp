@@ -83,7 +83,7 @@ int main(int argc, char **argv)
         {
             if (type == "-text")
             {
-                vector<string> keys{"e", "n"};
+                vector<string> keys = {"e", "n"};
                 for (int i = 0; i < keys.size(); i++)
                 {
                     if (params.find(keys[i]) == params.end())
@@ -101,7 +101,7 @@ int main(int argc, char **argv)
             }
             else
             {
-                vector<string> keys{"e", "n", "m"};
+                vector<string> keys = {"e", "n", "m"};
                 for (int i = 0; i < keys.size(); i++)
                 {
                     if (params.find(keys[i]) == params.end())
@@ -117,7 +117,7 @@ int main(int argc, char **argv)
         {
             if (type == "-text")
             {
-                vector<string> keys{"e", "p", "q"};
+                vector<string> keys = {"e", "p", "q"};
                 for (int i = 0; i < keys.size(); i++)
                 {
                     if (params.find(keys[i]) == params.end())
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
             }
             else
             {
-                vector<string> keys{"p", "q", "e", "c"};
+                vector<string> keys = {"p", "q", "e", "c"};
                 for (int i = 0; i < keys.size(); i++)
                 {
                     if (params.find(keys[i]) == params.end())
