@@ -239,7 +239,7 @@ long long df(long long p1q1, long long e)
 {
     long long a = e;
     long long b = p1q1;
-    vector<long long> rs{1, b / a};
+    vector<long long> rs = {1, b / a};
     long long r, c;
     r = b % a;
     b = a;
